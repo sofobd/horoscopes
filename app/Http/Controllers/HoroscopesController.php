@@ -28,7 +28,7 @@ class HoroscopesController extends Controller
         //null value set for best_year form
         $byyear_selected = '';
         //dd($zodiac_signs);
-        return view('welcome',compact('zodiac_signs','zodiac_signs_selected','bzodiac_signs_selected','year','year_selected','byear_selected','byyear_selected','final_data'));
+        return view('welcome', compact('zodiac_signs', 'zodiac_signs_selected', 'bzodiac_signs_selected', 'year', 'year_selected', 'byear_selected', 'byyear_selected', 'final_data'));
     }
 
     /*
@@ -39,7 +39,7 @@ class HoroscopesController extends Controller
         $zodiac_signs = Zodiac_signs::get();
         $year = date("Y");
         //dd($zodiac_signs);
-        return view('generate-horoscopes',compact('zodiac_signs','year'));
+        return view('generate-horoscopes', compact('zodiac_signs', 'year'));
     }
 
     /*
@@ -57,17 +57,16 @@ class HoroscopesController extends Controller
         $year = $request->year;
 
         //protect from duplicate entry
-        $entry_exist = Horoscopes::where('zodiac_sign_id',$zodiac_signs)->where('year',$year)->get();
-        if($entry_exist->isEmpty()){
+        $entry_exist = Horoscopes::where('zodiac_sign_id', $zodiac_signs)->where('year', $year)->get();
+        if ($entry_exist->isEmpty()) {
             //loop for year->month->day
             //$date=new DateTime();
-            for($m=1; $m<=12; $m++){
+            for ($m = 1; $m <= 12; $m++) {
                 $month = $m;
                 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                for ($d = 1; $d <= $daysInMonth; $d++)
-                {
+                for ($d = 1; $d <= $daysInMonth; $d++) {
                     $day = $d;
-                    $horoscope_score = rand(1,10);
+                    $horoscope_score = rand(1, 10);
                     Horoscopes::create([
                         'zodiac_sign_id' => $zodiac_signs,
                         'horoscope_score' => $horoscope_score,
@@ -79,8 +78,8 @@ class HoroscopesController extends Controller
                 //dd($month);
             }
             return redirect()->route('horoscopes.generate')
-                ->with('success','Horoscopes stored successfully.');
-        }else{
+                ->with('success', 'Horoscopes stored successfully.');
+        } else {
             return redirect()->route('horoscopes.generate')
                 ->withErrors('Duplicate entry!');
         }
@@ -109,27 +108,28 @@ class HoroscopesController extends Controller
         $byear_selected = '';
         //null value set for best_year form
         $byyear_selected = '';
-        //dd($init_date);
 
-            //if($request->ajax()) {
-            $data = Horoscopes::select('id', 'horoscope_score', DB::raw('concat(year,"-",month,"-",day) as start'))
-                ->where('zodiac_sign_id', $zodiac_signs_selected)
-                ->where('year',  $year_selected)
-                ->get();
-            //dd(response()->json($data));
-            $manipulated_data = array();
-            for($i=0;$i<count($data);$i++){
-                //$manipulated_data[$i]["title"] = $data[$i]["title"];
-                $manipulated_data[$i]["start"] = date_format(date_create($data[$i]["start"]),"Y-m-d");
-                $manipulated_data[$i]["color"] = $this->get_color_code($data[$i]["horoscope_score"]);
-                $manipulated_data[$i]["display"] = "background";
-            }
-            //dd(response()->json($manipulated_data));
-            $final_data =  $manipulated_data;
-        //}
-        $initial_date = date_format(date_create($init_date),"Y-m-d");
 
-        return view('welcome',compact('zodiac_signs','zodiac_signs_selected','bzodiac_signs_selected','year','year_selected','byear_selected','byyear_selected','final_data','initial_date'));
+        //get data from database
+        $data = Horoscopes::select('id', 'horoscope_score', DB::raw('concat(year,"-",month,"-",day) as start'))
+            ->where('zodiac_sign_id', $zodiac_signs_selected)
+            ->where('year', $year_selected)
+            ->get();
+        //dd(response()->json($data));
+
+        $manipulated_data = array();
+        for ($i = 0; $i < count($data); $i++) {
+            //$manipulated_data[$i]["title"] = $data[$i]["title"];
+            $manipulated_data[$i]["start"] = date_format(date_create($data[$i]["start"]), "Y-m-d");
+            $manipulated_data[$i]["color"] = $this->get_color_code($data[$i]["horoscope_score"]);
+            $manipulated_data[$i]["display"] = "background";
+        }
+        //dd(response()->json($manipulated_data));
+        $final_data = $manipulated_data;
+
+        $initial_date = date_format(date_create($init_date), "Y-m-d");
+
+        return view('welcome', compact('zodiac_signs', 'zodiac_signs_selected', 'bzodiac_signs_selected', 'year', 'year_selected', 'byear_selected', 'byyear_selected', 'final_data', 'initial_date'));
     }
 
     /*
@@ -202,34 +202,34 @@ class HoroscopesController extends Controller
         //get data for the selected year and zodiac sign
         $data = Horoscopes::select('id', 'horoscope_score', DB::raw('concat(year,"-",month,"-",day) as start'))
             ->where('zodiac_sign_id', $bzodiac_signs_selected)
-            ->where('year',  $byear_selected)
+            ->where('year', $byear_selected)
             ->get();
 
         //dd(response()->json($data));
         $manipulated_data = array();
-        for($i=0;$i<count($data);$i++){
+        for ($i = 0; $i < count($data); $i++) {
             //$manipulated_data[$i]["title"] = $data[$i]["title"];
-            $manipulated_data[$i]["start"] = date_format(date_create($data[$i]["start"]),"Y-m-d");
+            $manipulated_data[$i]["start"] = date_format(date_create($data[$i]["start"]), "Y-m-d");
             $manipulated_data[$i]["color"] = $this->get_color_code($data[$i]["horoscope_score"]);
             $manipulated_data[$i]["display"] = "background";
         }
-        $final_data =  $manipulated_data;
+        $final_data = $manipulated_data;
 
         //get the best month for the selected year and zodiac sign
         $best_month = Horoscopes::select('month', DB::raw('AVG(horoscope_score) as average_score'))
             ->where('zodiac_sign_id', $bzodiac_signs_selected)
-            ->where('year',  $byear_selected)
+            ->where('year', $byear_selected)
             ->groupby('month')
-            ->orderby('average_score','DESC')
+            ->orderby('average_score', 'DESC')
             ->limit(1)
             ->get();
-        //dd($best_month[0]->month);
+
 
         //init date
-        $init_date = $byear_selected."-".$best_month[0]->month."-01";
-        $initial_date = date_format(date_create($init_date),"Y-m-d");
+        $init_date = $byear_selected . "-" . $best_month[0]->month . "-01";
+        $initial_date = date_format(date_create($init_date), "Y-m-d");
 
-        return view('welcome',compact('zodiac_signs','zodiac_signs_selected','bzodiac_signs_selected','year','year_selected','byear_selected','byyear_selected','final_data','initial_date'));
+        return view('welcome', compact('zodiac_signs', 'zodiac_signs_selected', 'bzodiac_signs_selected', 'year', 'year_selected', 'byear_selected', 'byyear_selected', 'final_data', 'initial_date'));
     }
 
     /*
@@ -256,16 +256,16 @@ class HoroscopesController extends Controller
 
         //get the zodiac sign has the best year
         $best_zodiac_sign_query = DB::table('horoscopes')
-            ->join('zodiac_signs','horoscopes.zodiac_sign_id','=','zodiac_signs.id')
+            ->join('zodiac_signs', 'horoscopes.zodiac_sign_id', '=', 'zodiac_signs.id')
             ->select('zodiac_signs.name', DB::raw('AVG(horoscopes.horoscope_score) as average_score'))
-            ->where('year',  $byyear_selected)
+            ->where('year', $byyear_selected)
             ->groupby('zodiac_signs.name')
-            ->orderby('average_score','DESC')
+            ->orderby('average_score', 'DESC')
             ->limit(1)
             ->get();
-        //dd($best_zodiac_sign);
+        
         $best_zodiac_sign = $best_zodiac_sign_query[0]->name;
 
-        return view('welcome',compact('zodiac_signs','zodiac_signs_selected','bzodiac_signs_selected','year','year_selected','byear_selected','byyear_selected','best_zodiac_sign'));
+        return view('welcome', compact('zodiac_signs', 'zodiac_signs_selected', 'bzodiac_signs_selected', 'year', 'year_selected', 'byear_selected', 'byyear_selected', 'best_zodiac_sign'));
     }
 }
