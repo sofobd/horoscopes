@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//custom route public
 Route::get('/', 'HoroscopesController@index')->name('index');
 Route::post('/horoscopes/calendar', 'HoroscopesController@calendar')->name('horoscopes.calendar');
 Route::post('/horoscopes/calendar/best/month', 'HoroscopesController@best_month_calendar')->name('horoscopes.best_month');
@@ -23,7 +24,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-//custom route
+//custom route access controlled
 //Route::get('/horoscopes/generate', [HoroscopesController::class,'generate'])->middleware(['auth'])->name('horoscopes-generate');
 Route::get('/horoscopes/generate', 'HoroscopesController@generate')->middleware(['auth'])->name('horoscopes.generate');
 Route::post('/horoscopes/store', 'HoroscopesController@store')->middleware(['auth'])->name('horoscopes.store');
