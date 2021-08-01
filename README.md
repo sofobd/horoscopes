@@ -26,6 +26,7 @@ composer create-project laravel/laravel horoscopes
 5. Edit model and migration as per project need
 6. Add following functions in the horoscopesController
  - public function index()
+ - public function store_sign()
  - public function generate()
  - public function store()
  - public function calendar()
@@ -53,6 +54,7 @@ database/migrations/2021_07_27_065319_create_horoscopes_table.php
 public/css/main.css
 public/js/main.js
 
+resources/views/add-zodiac-sign.blade.php
 resources/views/dashboard.blade.php
 resources/views/generate-horoscopes.blade.php
 resources/views/welcome.blade.php
