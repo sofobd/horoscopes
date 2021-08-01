@@ -32,6 +32,32 @@ class HoroscopesController extends Controller
     }
 
     /*
+     * add zodiac sign
+     * accepts request/input parameter: zodiac sign name
+     */
+    public function store_sign(Request $request)
+    {
+        $request->validate([
+            'zodiac_sign' => 'required',
+        ]);
+
+        $zodiac_sign = $request->zodiac_sign;
+
+        //protect from duplicate entry
+        $entry_exist = Zodiac_signs::where('name', $zodiac_sign)->get();
+        if ($entry_exist->isEmpty()) {
+            Zodiac_signs::create([
+                'name' => $zodiac_sign,
+                ]);
+            return redirect()->route('horoscopes.sign.add')
+                ->with('success', 'Zodiac Sign stored successfully.');
+        }else {
+            return redirect()->route('horoscopes.sign.add')
+                ->withErrors('Duplicate entry!');
+        }
+    }
+
+    /*
      * Horoscope score generation page
      */
     public function generate()
@@ -263,7 +289,7 @@ class HoroscopesController extends Controller
             ->orderby('average_score', 'DESC')
             ->limit(1)
             ->get();
-        
+
         $best_zodiac_sign = $best_zodiac_sign_query[0]->name;
 
         return view('welcome', compact('zodiac_signs', 'zodiac_signs_selected', 'bzodiac_signs_selected', 'year', 'year_selected', 'byear_selected', 'byyear_selected', 'best_zodiac_sign'));

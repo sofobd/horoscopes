@@ -26,6 +26,11 @@ Route::get('/dashboard', function () {
 
 //custom route access controlled
 //Route::get('/horoscopes/generate', [HoroscopesController::class,'generate'])->middleware(['auth'])->name('horoscopes-generate');
+Route::get('/horoscopes/sign/add', function () {
+    return view('add-zodiac-sign');
+})->middleware(['auth'])->name('horoscopes.sign.add');
+
+Route::post('/horoscopes/sign/store', 'HoroscopesController@store_sign')->middleware(['auth'])->name('horoscopes.sign.store');
 Route::get('/horoscopes/generate', 'HoroscopesController@generate')->middleware(['auth'])->name('horoscopes.generate');
 Route::post('/horoscopes/store', 'HoroscopesController@store')->middleware(['auth'])->name('horoscopes.store');
 

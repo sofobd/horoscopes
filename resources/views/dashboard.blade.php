@@ -12,6 +12,9 @@
                     You're logged in!
                 </div>
                 <div class="p-6 bg-white border-b border-gray-200">
+                    <a href="{{ url('horoscopes/sign/add') }}">Add Zodiac Sign</a>
+                </div>
+                <div class="p-6 bg-white border-b border-gray-200">
                     <a href="{{ url('horoscopes/generate') }}">Generate Horoscopes</a>
                 </div>
             </div>
