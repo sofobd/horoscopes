@@ -8,31 +8,58 @@ Functionalities are:
 4.  Shows which Zodiac sign has the best year (by score).
 
 Major Steps are:
-1. Install Laravel using Composer. composer create-project laravel/laravel horoscopes
-2. Configure Database in the .env file.
-3. Create Authentication using Laravel Breeze.
-        composer require laravel/breeze --dev
-        php artisan breeze:install
-        npm install
-        npm run dev
-        php artisan migrate
+1. Install Laravel using Composer. 
+```
+composer create-project laravel/laravel horoscopes
+```
+3. Configure Database in the .env file.
+4. Create Authentication using Laravel Breeze.
+ ```
+  composer require laravel/breeze --dev
+  php artisan breeze:install
+  npm install
+  npm run dev
+  php artisan migrate
+ ```
 4. Create Horoscopes model, database migration and controller
         php artisan make:model Horoscopes -mc
 5. Edit model and migration as per project need
 6. Add following functions in the horoscopesController
-        - public function index()
-        - public function generate()
-        - public function store()
-        - public function calendar()
-        - private function get_color_code()
-        - public function best_month_calendar()
-        - public function best_of_year()
+ - public function index()
+ - public function generate()
+ - public function store()
+ - public function calendar()
+ - private function get_color_code()
+ - public function best_month_calendar()
+ - public function best_of_year()
 7. Create/edit following blade files
-        - generate-horoscopes
-        - welcome
+ - generate-horoscopes
+ - welcome
 8. Add routes in routes/web.php file
 9. Add Fullcalendar 5.9.0. just download the package zip. Add main.js and main.css to the project. Add some script to the welcome blade.
 
+##Installation
+1. Install Laravel 8
+2. Configure Database
+3. Create Laravel Auth
+4. copy 
+```
+app/Http/Controllers/HoroscopesController.php
+app/Models/Horoscopes.php
+app/Models/Zodiac_signs.php
+database/migrations/2021_07_27_063533_create_zodiac_signs_table.php
+database/migrations/2021_07_27_065319_create_horoscopes_table.php
+
+public/css/main.css
+public/js/main.js
+
+resources/views/dashboard.blade.php
+resources/views/generate-horoscopes.blade.php
+resources/views/welcome.blade.php
+
+routes/web.php
+```
+5. Run migration
 
 Thats it!
 There may some design issue as I did not work much with design part of this project. I focused on the functionality only.
